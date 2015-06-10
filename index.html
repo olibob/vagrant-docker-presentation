@@ -45,12 +45,16 @@
 					<h4>Building VMs efficiently with Vagrant</h4>
 					<h4>Stepping into the container world with Docker</h4>
 					<p>
-          <small>Created by <a href="http://twitter.com/zepag">@zepagl</a>/ <a href="http://twitter.com/xwaldrob">@XwaldRob</a></small>
+          <small>Created by <a href="http://twitter.com/zepag">@zepagl</a> / <a href="http://twitter.com/xwaldrob">@XwaldRob</a></small>
 					</p>
 				</section>
 
 				<section>
-					<h2>Vagrant - What is it?</h2>
+					<h2>Vagrant</h2>
+				</section>
+
+				<section>
+					<h2>What is it?</h2>
 					<p class="fragment">A tool to build VMs based on boxes (ISOs)</p>
 					<p class="fragment">Used to be as close as possible to Prod</p>
 					<p class="fragment">Initially build for VirtualBox and extended</p>
@@ -148,6 +152,10 @@ end
 						<li>destroy</li>
 					</ul>
 					</p>
+					<aside class="notes">
+						<p>- vagrant up</p>
+						<p>- open default apache page in browser</p>
+					</aside>
 				</section>
 
 				<section>
@@ -175,13 +183,14 @@ end
 						<p>- curl https://discovery.etcd.io/new?size=3</p>
 						<p>- cp user-data and add token to etcd section</p>
 						<p>- cp config.rg and change number of instances</p>
+						<p>- vagrant up</p>
 						<p>- ssh add insecure key + vagrant up</p>
 						<p>- fleetctl list-machines</p>
 					</aside>
 				</section>
 
 				<section>
-					<h2>Demo: Docker machine</h2>
+					<h2>Demo: Docker VM</h2>
 					<h4>Ansible provisioning - private network</h4>
 					<pre><code data-trim class="yaml">
 						---
@@ -195,6 +204,11 @@ end
         dest: /tmp
         [...]
 					</code></pre>
+					<aside class="notes">
+						<p>- just a vagrant up --provision</p>
+						<p>- show the super simple ansible file</p>
+						<p>- connect the docker client and test the connection</p>
+					</aside>
 				</section>
 
 				<section>
@@ -202,9 +216,84 @@ end
 				</section>
 
 				<section>
-					<h2>Show me the money!</h2>
-					<p>You can download the presentation and the demos on github</p>
-					<p><a href="#">olibob</a></p>
+					<h2>What is it?</h2>
+					<p>
+Docker is an open platform for developers and sysadmins to build, ship, and run distributed applications. Consisting of Docker Engine, a portable, lightweight runtime and packaging tool, and Docker Hub, a cloud service for sharing applications and automating workflows, Docker enables apps to be quickly assembled from components and eliminates the friction between development, QA, and production environments. As a result, IT can ship faster and run the same app, unchanged, on laptops, data center VMs, and any cloud.
+					</p>
+				</section>
+
+				<section>
+				<h4>Solomon Hykes, Docker’s Founder & CTO, gives an overview of Docker in this short video (7:16).</h4>
+					<iframe width="560" height="315" src="https://www.youtube.com/embed/jB-Ddfph7EI" frameborder="0" allowfullscreen></iframe>
+				</section>
+
+				<section>
+					<h2>Containers?</h2>
+					<img src="img/containers.png" alt="containers">
+				</section>
+
+				<section>
+					<h2>Running containers everywhere!</h2>
+					<p class="fragment">Maturity of underlying technology (cgroups, namespaces, copy-on-write systems)</p>
+					<p class="fragment">Ability to run on any Linux server today: physical, virtual, VM, cloud, OpenStack...</p>
+					<p class="fragment">Ability to move quickly between any of the above</p>
+					<p class="fragment">Ability to share containerized components</p>
+					<p class="fragment">Self contained environment - no dependency hell</p>
+				</section>
+
+				<section>
+					<h2>What's in it for devs and ops?</h2>
+					<small>if you catch my drift ;-)</small>
+				</section>
+
+				<section>
+					<h2>Devs worry about</h2>
+					<p class="fragment">code</p>
+					<p class="fragment">libraries</p>
+					<p class="fragment">apps</p>
+					<p class="fragment">data</p>
+					<p class="fragment">all linux servers look the same</p>
+				</section>
+
+				<section>
+					<h2>Ops worry about</h2>
+					<p class="fragment">logging</p>
+					<p class="fragment">file system</p>
+					<p class="fragment">monitoring</p>
+					<p class="fragment">networking</p>
+					<p class="fragment">all containers start, stop, copy, attach, etc ... the same way</p>
+				</section>
+
+				<section>
+					<h2>modern software factory</h2>
+					<h4>the same container can go from dev, to test, to QA, to Prod</h4>
+					<img src="img/factory.png" alt="factory">
+				</section>
+
+				<section>
+					<h2>Docker architecture</h2>
+					<p class="fragment">The Docker daemon</br><small>Receives and processes incoming Docker API requests</small></p>
+					<p class="fragment">The Docker client<br><small>Command line tool - the docker binary <br>Talks to the Docker daemon via the Docker API</small></p>
+					<p class="fragment">Command line tool - the docker binary<br><small>Talks to the Docker daemon via the Docker API</small></p>
+					<p class="fragment">Docker Hub Registry<br><small>Public image registry <br>The Docker daemon talks to it via the registry API</small></p>
+				</section>
+
+				<section>
+					<h2>Trying Docker</h2>
+					<p><a href="https://www.docker.com/tryit/">Try it!</a></p>
+				</section>
+
+				<section>
+					<h2>Running Docker</h2>
+					<p>Linux<br><small>native</small></p>
+					<p>OS X & Windows<br><small>via a virtual machine</small></p>
+					<p><a href="https://docs.docker.com/installation/#installation">All you need</a> to get Docker installed</p>
+					<p><small>ubuntu, mac os x, windows, aws ec2, arch linux, centos, crux linux, debian, fedora, frugalware, gce, gentoo, IBM softlayer, Joyent compute service, Microsoft azure, racspace cloud, rhel, oracle Linux, suse</small></p>
+				</section>
+
+				<section>
+					<img src="http://www.mediafactory.org.au/natalie-herbstreit/files/2014/10/the-end-2gt1jas.jpg" alt="thatsallfolks">
+					<p>You can download the presentation and the demos on <a href="https://github.com/olibob/vagrant-docker-presentation">Github</a></p>
 				</section>
 
 			</div>
