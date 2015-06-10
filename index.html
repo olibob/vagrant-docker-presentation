@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Vagrant/Docker Intro</title>
+
+		<meta name="description" content="A framework for easily creating beautiful presentations using HTML">
+		<meta name="author" content="Hakim El Hattab">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/beige.css" id="theme">
+
+		<!-- Code syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				<section>
+					<h2>Vagrant/Docker Intro</h2>
+					<h4>Building VMs efficiently with Vagrant</h4>
+					<h4>Stepping into the container world with Docker</h4>
+					<p>
+          <small>Created by <a href="http://twitter.com/zepag">@zepagl</a>/ <a href="http://twitter.com/xwaldrob">@XwaldRob</a></small>
+					</p>
+				</section>
+
+				<section>
+					<h2>Vagrant - What is it?</h2>
+					<p class="fragment">A tool to build VMs based on boxes (ISOs)</p>
+					<p class="fragment">Used to be as close as possible to Prod</p>
+					<p class="fragment">Initially build for VirtualBox and extended</p>
+					<p class="fragment">Written in Ruby</p>
+					<p class="fragment">Free (VirtualBox) | Pay (VMWare Fusion)</p>
+					<aside class="notes">
+					<p>- Boxes: minimal installations to keep a small foot print</p>
+					<p>- Advantage of Fusion: faster IO</p>
+					<p>- Ruby: just a simple DSL</p>
+					<p>- Providers: Parallels or Vagrant-LXC, etc</p>
+					</aside>
+				</section>
+
+				<section>
+					<h2>Why should I care?</h2>
+					<p class="fragment">Fast way to create a dedicated Dev environment</p>
+					<p class="fragment">Pets vs Cattle: throw away VMs</p>
+					<p class="fragment">It's much faster than creating a VM by hand and configuring it</p>
+					<aside class="notes">
+						<p>- the VM can be destroyed and recreated</p>
+						<p>- It's all in the Vagrant file and the provisioning tools used</p>
+					</aside>
+				</section>
+
+				<section>
+					<h2>How do I install it?</h2>
+					<p class="fragment">Get <a href="https://www.virtualbox.org/">VirtualBox</a></p>
+					<p class="fragment">Download the Vagrant <a href="https://www.vagrantup.com/downloads.html">installer</a> (Mac/Linux/Win)</p>
+					<p class="fragment">Get a <a href="https://atlas.hashicorp.com/boxes/search">Box</a></p>
+				</section>
+
+				<section>
+					<h2>How do I access it</h2>
+					<h4>Services</h4>
+					<p>NAT</p>
+					<pre><code data-trim class="ruby">
+						config.vm.network :forwarded_port, guest: 8080, host: 80
+					</code></pre>
+					<p>Private Network</p>
+					<pre><code data-trim class="ruby">
+						config.vm.network "private_network", ip: "192.168.60.100"
+					</code></pre>
+					<p>Public Network</p>
+					<pre><code data-trim class="ruby">
+						config.vm.network "public_network"
+					</code></pre>
+					<h4>Remote connection</h4>
+					<p>SSH/RDP</p>
+					<aside class="notes">
+						<p>- no ip = dchp</p>
+						<p>- NAT only is not recommended</p>
+						<p>- Public is not recommended if not sharing with colleagues</p>
+					</aside>
+				</section>
+
+				<section>
+					<h2>How do I customize it?</h2>
+					<pre><code data-trim class="ruby">
+config.vm.provider "virtualbox" do |vb|
+  # Display the VirtualBox GUI when booting the machine
+  # vb.gui =
+  # Customize the amount of memory on the VM:
+  vb.cpus = 4
+  vb.memory = 4096
+  config.vm.hostname = "dockerbox"
+end
+					</code></pre>
+				</section>
+
+				<section>
+					<h2>What about configuration management?</h2>
+					<h4>All major provisioners are supported</h4>
+					<p class="fragment">shell</p>
+					<p class="fragment">Chef</p>
+					<p class="fragment">Puppet</p>
+					<p class="fragment">Ansible</p>
+					<p class="fragment">CFEngine</p>
+					<p class="fragment">...</p>
+				</section>
+
+				<section>
+					<h2>Demo: Create a Centos 7 VM</h2>
+					<h4>shell provisionning - private network</h4>
+					<pre><code data-trim contenteditable class="bash">
+					> vagrant init chef/centos-7.0
+					</code></pre>
+					<p>Survival kit
+					<ul>
+						<li>up</li>
+						<li>halt</li>
+						<li>suspend</li>
+						<li>resume</li>
+						<li>reload</li>
+						<li>ssh</li>
+						<li>destroy</li>
+					</ul>
+					</p>
+				</section>
+
+				<section>
+					<h2>Demo: Create a CoreOS Cluster</h2>
+					<pre><code data-trim class="ruby">
+	(1..$num_instances).each do |i|
+    config.vm.define vm_name = "%s-%02d" % [$instance_name_prefix, i] do |config|
+      config.vm.hostname = vm_name
+      ...
+    end
+    config.vm.provider :virtualbox do |vb|
+      vb.gui = vm_gui
+      vb.memory = vm_memory
+      vb.cpus = vm_cpus
+    end
+
+    ip = "172.17.8.#{i+100}"
+    config.vm.network :private_network, ip: ip
+    [...]
+
+end
+					</code></pre>
+					<aside class="notes">
+						<p>- cp user-data.sample user-data</p>
+						<p>- curl https://discovery.etcd.io/new?size=3</p>
+						<p>- cp user-data and add token to etcd section</p>
+						<p>- cp config.rg and change number of instances</p>
+						<p>- ssh add insecure key + vagrant up</p>
+						<p>- fleetctl list-machines</p>
+					</aside>
+				</section>
+
+				<section>
+					<h2>Demo: Docker machine</h2>
+					<h4>Ansible provisioning - private network</h4>
+					<pre><code data-trim class="yaml">
+						---
+- hosts: all
+  sudo: yes
+  sudo_user: root
+  tasks:
+    - name: Download latest docker binary archive
+      get_url:
+        url: http://get.docker.io/builds/Linux/x86_64/docker-latest.tgz
+        dest: /tmp
+        [...]
+					</code></pre>
+				</section>
+
+				<section>
+					<h2>Docker</h2>
+				</section>
+
+				<section>
+					<h2>Show me the money!</h2>
+					<p>You can download the presentation and the demos on github</p>
+					<p><a href="#">olibob</a></p>
+				</section>
+
+			</div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+
+			// Full list of configuration options available at:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+				// Optional reveal.js plugins
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, condition: function() { return !!document.querySelector( 'pre code' ); }, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true },
+					{ src: 'plugin/notes/notes.js', async: true }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>

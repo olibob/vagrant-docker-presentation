@@ -1,0 +1,13 @@
+# Brown Bag session: vagrant and docker intro
+
+This presentation is done using revealjs: [https://github.com/hakimel/reveal.js/](https://github.com/hakimel/reveal.js/)
+
+A dockerfile and docker-compose yaml file are provided to get you started quickly.
+
+- clone this repo
+- build your image based on the provided docker file:
+`docker build -t “bob/reveal” . `
+- `docker-compose up`
+- point your browser to `http://your_docker_host:8000`
+
+All demos can be found in the Vagrant directory.
