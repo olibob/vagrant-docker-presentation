@@ -460,7 +460,122 @@ RUN yum -y install wget
 
 				<section>
 					<h2>So let's do something interesting</h2>
-					<small><p>Like cross compiling our </p></small>
+					<h4>Cross compiling a Go app</h4>
+					<ul>
+						<li>We'll download <a href="https://registry.hub.docker.com/_/golang/">golang images</a></li>
+						<li>We'll compile and run your app</li>
+						<li>We'll cross compile it for linux, windows and OS X</li>
+					</ul>
+					<aside class="notes">
+						<p>docker pull go</p>
+						<p>docker run --rm -v /Users/orobert/Documents/Dev/Vagrant/presentation/Docker/Go:/usr/src/myapp -w /usr/src/myapp golang go build -v</p>
+						<p>compile and notice it creates a linux binary</p>
+						<p>docker pull golang:cross</p>
+						<p>docker run --rm -it -v /Users/orobert/Documents/Dev/Vagrant/presentation/Docker/Go:/usr/src/myapp -w /usr/src/myapp golang:cross bash</p>
+						<p>run the run.sh script</p>
+					</aside>
+				</section>
+
+				<section>
+					<h2>Working with volumes</h2>
+					<p class="fragment">Bypassing the copy-on-write system to obtain native disk I/O performance</p>
+					<p class="fragment">Bypassing copy-on-write to leave some files out of docker commit</p>
+					<p class="fragment">Sharing a directory between multiple containers</p>
+					<p class="fragment">Sharing a directory between the host and a container</p>
+					<p class="fragment">Sharing a single file between the host and a container</p>
+				</section>
+
+				<section>
+					<h2>Volumes</h2>
+					<h4>In a command</h4>
+					<pre><code data-trim class"bash">
+						docker run -d -v /var/lib/postgresql postgresql
+					</code></pre>
+					<h4>In a Dockerfile</h4>
+					<pre><code data-trim>
+						Volume /var/lib/postgresql
+					</code></pre>
+					<ul>Volumes
+					<li>same performance an host I/O</li>
+					<li>content is not included into a resulting image</li>
+					<li>content can not be changed in a Dockerfile</li>
+					<li>can be shared across containers</li>
+					<li>exist independently of containers</li>
+					</ul>
+				</section>
+
+				<section>
+					<h2>Use cases</h2>
+					<p class="fragment">You want to decide on your FS strategy (LVM, ZFS, BtrFS, ...)</p>
+					<p class="fragment">You have a separate disk with better performance (SSD) or resiliency (EBS) than the system disk, and you want to put important data on that disk</p>
+					<p class="fragment">You want to share a directory on your host with the container</p>
+					<p class="fragment">What happens when you remove containers?</p>
+					<p><span class="fragment">one container reference</span><span class="fragment">, last container orphan</span><span class="fragment">, /var/lib/docker</span></p>
+					<aside class="notes">
+						<p>docker run --name mydata -v /var/www/html busybox true</p>
+						<p>docker run -it --rm --volumes-from mydata centos bash</p>
+						<p>add index.html</p>
+						<p>docker run -d --name apa --volumes-from mydata -p 8090:80 bob/apache</p>
+					</aside>
+				</section>
+
+				<section>
+					<h2>Linking containers</h2>
+					<h4>Using names and links to communicate across containers</h4>
+					<ul>Benefit
+						<ul><li>container isolation</li></ul>
+						Drawback
+						<ul><li>operationally challenging (ambassadors, overlay network)</li></ul>
+					</ul>
+					<p>Wordpress: 2 containers linked</p>
+					<aside class="notes">
+						<p>docker run -d --name wd-database -e MYSQL_ROOT_PASSWORD=pass1234 mysql</p>
+						<p>docker run -d --name wp --link wpdb:mysql -p 8099:80 wordpress</p>
+						<p>point browser to WP site</p>
+						<p>show env variables that allow the magic</p>
+					</aside>
+				</section>
+
+				<section>
+					<h2>docker compose</h2>
+					<h4>"Big ass" commands can be reduced to nothing</h4>
+					<pre><code data-trim class="nohighlight">
+wordpress:
+  image: wordpress
+  links:
+    - db:mysql
+  ports:
+    - 8080:80
+
+db:
+  image: mysql
+  environment:
+    MYSQL_ROOT_PASSWORD: pass1234
+					</code></pre>
+					<aside class="notes">
+						<p>wordpress docker compose demo</p>
+					</aside>
+				</section>
+
+				<section>
+					<h2>Docker Hub</h2>
+					<p class="fragment"><a href="https://hub.docker.com/">https://hub.docker.com/</a></p>
+					<p class="fragment">push/pull/auto build (Github)</p>
+					<p class="fragment">public/private($)</p>
+					<p class="fragment">finding images/security</p>
+				</section>
+
+				<section>
+					<h2>Security</h2>
+					<p class="fragment">Do not expose the docker API!</p>
+					<p class="fragment">And ... do not expose the docker API!</p>
+					<p class="fragment">For good measue: do not expose the docker API!</p>
+					<p class="fragment">If you do: TLS!!!</p>
+					<p class="fragment">--privileged (full access) or --net host (sniff all traffic in and out of the host)</p>
+					<p class="fragment">There is more to it: containers don't contain, default user is root, use external tools (SELinux)</p>
+				</section>
+				<section>
+					<p>This presentation was done using Docker in a Vagrant VM</p>
 				</section>
 
 				<section>
