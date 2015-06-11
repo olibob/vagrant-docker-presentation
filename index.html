@@ -136,10 +136,10 @@ end
 				</section>
 
 				<section>
-					<h2>Demo: Create a Centos 7 VM</h2>
+					<h2>Demo: Create a CentOS 7 VM</h2>
 					<h4>shell provisionning - private network</h4>
 					<pre><code data-trim contenteditable class="bash">
-					> vagrant init chef/centos-7.0
+					> vagrant init chef/CentOS-7.0
 					</code></pre>
 					<p>Survival kit
 					<ul>
@@ -274,13 +274,14 @@ Docker is an open platform for developers and sysadmins to build, ship, and run 
 					<h2>Docker architecture</h2>
 					<p class="fragment">The Docker daemon</br><small>Receives and processes incoming Docker API requests</small></p>
 					<p class="fragment">The Docker client<br><small>Command line tool - the docker binary <br>Talks to the Docker daemon via the Docker API</small></p>
-					<p class="fragment">Command line tool - the docker binary<br><small>Talks to the Docker daemon via the Docker API</small></p>
 					<p class="fragment">Docker Hub Registry<br><small>Public image registry <br>The Docker daemon talks to it via the registry API</small></p>
 				</section>
 
 				<section>
-					<h2>Trying Docker</h2>
-					<p><a href="https://www.docker.com/tryit/">Try it!</a></p>
+					<h2><a href="https://www.docker.com/tryit/">Try it!</a></h2>
+				</section>
+				<section>
+					<img src="img/tryit.png" alt="tryit">
 				</section>
 
 				<section>
@@ -288,12 +289,183 @@ Docker is an open platform for developers and sysadmins to build, ship, and run 
 					<p>Linux<br><small>native</small></p>
 					<p>OS X & Windows<br><small>via a virtual machine</small></p>
 					<p><a href="https://docs.docker.com/installation/#installation">All you need</a> to get Docker installed</p>
-					<p><small>ubuntu, mac os x, windows, aws ec2, arch linux, centos, crux linux, debian, fedora, frugalware, gce, gentoo, IBM softlayer, Joyent compute service, Microsoft azure, racspace cloud, rhel, oracle Linux, suse</small></p>
+					<p><small>Ubuntu, Mac OS X, Windows, AWS ec2, Arch Linux, CentOS, Crux Linux, Debian, Fedora, Frugalware, GCE, Gentoo, IBM Softlayer, Joyent Compute Service, Microsoft Azure, Rackspace Cloud, RHEL, Oracle Linux, Suse</small></p>
+					<aside class="notes">
+						<p>If you need a VM, we build one a few minutes ago (show shell provisioning)</p>
+					</aside>
 				</section>
 
 				<section>
-					<img src="http://www.mediafactory.org.au/natalie-herbstreit/files/2014/10/the-end-2gt1jas.jpg" alt="thatsallfolks">
-					<p>You can download the presentation and the demos on <a href="https://github.com/olibob/vagrant-docker-presentation">Github</a></p>
+					<h2>The "hello, world" container</h2>
+					<small>
+					<p>We used one of the smallest, simples images available: <em>busybox</em></p>
+					<p>busybox is typically used in embedded systems (phones, routers...)</p>
+					<p>We ran a single process and echo'ed hello world</p>
+					</small>
+					<pre><code data-trim class="bash">
+> docker run busybox echo "Hello World"
+Hello, World
+					</code></pre>
+				</section>
+
+				<section>
+					<h2>Bare-Bones ubuntu on CentOS</h2>
+					<p>Runs bash in a stripped ubuntu system on CentOS</p>
+					<pre><code data-trim class="bash">
+> docker run -it ubuntu bash
+root@6489e6302513:/# dpkg -l | wc -l
+189
+root@6489e6302513:/# ps -ef
+UID        PID  PPID  C STIME TTY          TIME CMD
+root         1     0  0 07:27 ?        00:00:00 bash
+root        18     1  0 07:28 ?        00:00:00 ps -ef
+root@6489e6302513:/#
+					</code></pre>
+					<aside class="notes">
+						<p>-i = connect us to the container's stdin</p>
+						<p>-t = we need a pseudo-terminal (tty)</p>
+						<p>dpkg -l | wc</p>
+						<p>- apt-get install -y curl</p>
+						<p>- curl ifconfig.me/ip</p>
+						<p>if we start a new container, curl is gone, normal, it' a brand new container</p>
+					</aside>
+				</section>
+
+				<section>
+					<h2>Background containers</h2>
+					<p class="fragment">A container that runs forever</p>
+					<p class="fragment">A container running in the background</p>
+					<p class="fragment">Listing runing containers</p>
+					<p class="fragment">Show container logs (tailing)</p>
+					<p class="fragment">Stop/Kill containers</p>
+					<p class="fragment">Restart/Attach to a container</p>
+					<aside class="notes">
+						<p>bob/infinity</p>
+						<p>docker ps (-a -q -l)</p>
+						<p>docker logs --tail 1 --follow cid</p>
+						<p>docker stop kill</p>
+						<p>docker start and attach</p>
+					</aside>
+				</section>
+
+				<section>
+					<h2>So what is an image?</h2>
+					<img src="img/docker_image.png" alt="docker_image" width="50%" height="50%">
+					<aside class="notes">
+						<p>An image is a collection of files + some meta data (the files form the root filesystem of a container)</p>
+						<p>Images are made of layers, conceptually stacked on top of each other</p>
+						<p>Each layer can add, change, and remove files</p>
+					</aside>
+				</section>
+
+				<section>
+					<h2>Difference between containers and images</h2>
+					<p class="fragment">An image is a read-only FS</p>
+					<p class="fragment">A container is an encapsulated set of processes in a read-write copy of that FS</p>
+					<p class="fragment"><em>docker run</em> starts a container from an image</p>
+				</section>
+
+				<section>
+					<h2>OOP analogy</h2>
+					<p>Images are conceptually similar to classes</p>
+					<p>Layers are conceptually similar to inheritance</p>
+					<p>Containers are conceptually similar to instances</p>
+				</section>
+
+				<section>
+					<h2>How do we modify images then?</h2>
+					<p class="fragment">We don't</p>
+					<p class="fragment">We create a new container from that image</p>
+					<p class="fragment">We make changes to that container</p>
+					<p class="fragment">When done, we transform them into a new layer</p>
+					<p class="fragment">A new image is created by staking the new layer on top of the old one</p>
+					<aside class="notes">
+						<p>build</p>
+						<p>commit</p>
+					</aside>
+				</section>
+
+				<section>
+					<h2>Image namespaces</h2>
+					<ul>
+						<li>Root: <span class="fragment">centos</span></li>
+						<li>User (Docker Hub): <span class="fragment">bob/infinity</span></li>
+						<li>Self-Hosted: <span class="fragment">registry.example.com:5000/a-private-image</span></li>
+					</ul>
+					<aside class="notes">
+						<p>Show current images</p>
+						<p>Upload and download images via push pull commands</p>
+						<p>Image tags</p>
+					</aside>
+				</section>
+
+				<section>
+					<h2>Building images interactively</h2>
+					<p class="fragment">docker commit</p>
+					<p class="fragment">docker tag</p>
+					<p class="fragment">docker diff</p>
+					<aside class="notes">
+						<p>base = centos bash</p>
+						<p>install wget</p>
+						<p>docker diff new container (docker ps -al)</p>
+						<p>docker commit wget bob/centos:001</p>
+						<p>docker tag bob/centos:001 bob/centos:latest</p>
+					</aside>
+				</section>
+
+				<section>
+					<h2>Building Images with a Dockerfile</h2>
+					<p>Dockerfile</p>
+					<pre><code data-trim>
+FROM centos
+ENV REFRESHED_AT 2015-06-11
+RUN yum -y install wget
+					</code></pre>
+					<p>Run</p>
+					<pre><code data-trim class="bash">
+						docker build -t "bob/myimage" .
+					</code></pre>
+					<aside class="notes">
+						<p>Explain the process</p>
+						<p>Show docker history new_image</p>
+					</aside>
+				</section>
+
+				<section>
+					<h2>Inspecting containers</h2>
+					<pre><code data-trim>
+						docker inspect presentation_pres_1 J '.[].Volumes'
+					</code></pre>
+					<small><p>If you want to parse JSON from the shell, use <a href="http://stedolan.github.io/jq/">JQ</a></p></small>
+					<p>--format</p>
+					<pre><code data-trim>
+						docker inspect --format '{{ json .Created }}' presentation_pres_1
+					</code></pre>
+				</section>
+
+				<section>
+					<h2>Networking basics</h2>
+					<small><p>All based on port mapping private addresses (because of IPV4)</p></small>
+					<ul>
+						<li>-P --publish-all: will publish all exposed ports</li>
+						<li>-p host:guest: manual allocation</li>
+					</ul>
+					<aside class="notes">
+						<p>docker run -d --name apache -v /Users/orobert/Documents/Dev/Vagrant/presentation/Docker/apache/www:/var/www/html -p 8090:80 bob/apache</p>
+						<p>3 ways to integrate: let docker choose a port, do it manually, use an overlay network</p>
+						<p>docker inspect --format '{{ json .NetworkSettings.IPAddress }}' apache</p>
+						<p>ping container = no overhead</p>
+					</aside>
+				</section>
+
+				<section>
+					<h2>So let's do something interesting</h2>
+					<small><p>Like cross compiling our </p></small>
+				</section>
+
+				<section>
+				<p>You can download the presentation and the demos on <a href="https://github.com/olibob/vagrant-docker-presentation">Github</a></p>
+					<img src="img/the-end.jpg" alt="thatsallfolks">
 				</section>
 
 			</div>
