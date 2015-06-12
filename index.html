@@ -107,6 +107,7 @@
 						<p>- no ip = dchp</p>
 						<p>- NAT only is not recommended</p>
 						<p>- Public is not recommended if not sharing with colleagues</p>
+						<p>net: no net, host net, nat net, pub net, clari net ;-)</p>
 					</aside>
 				</section>
 
@@ -136,7 +137,7 @@ end
 				</section>
 
 				<section>
-					<h2>Demo: Create a CentOS 7 VM</h2>
+					<h2>Create a single VM</h2>
 					<h4>shell provisionning - private network</h4>
 					<pre><code data-trim contenteditable class="bash">
 					> vagrant init chef/CentOS-7.0
@@ -159,7 +160,7 @@ end
 				</section>
 
 				<section>
-					<h2>Demo: Create a CoreOS Cluster</h2>
+					<h2>Create a Cluster</h2>
 					<pre><code data-trim class="ruby">
 	(1..$num_instances).each do |i|
     config.vm.define vm_name = "%s-%02d" % [$instance_name_prefix, i] do |config|
@@ -236,7 +237,7 @@ Docker is an open platform for developers and sysadmins to build, ship, and run 
 					<h2>Running containers everywhere!</h2>
 					<p class="fragment">The underlying technology is mature (cgroups, namespaces, copy-on-write systems)</p>
 					<p class="fragment">Ability to run on any Linux server today: physical, virtual, VM, cloud, OpenStack...</p>
-					<p class="fragment">Ability to switch easily from one to the other</p>
+					<p class="fragment">Ability to switch easily from one host to the other</p>
 					<p class="fragment">Self contained environment = no dependency hell</p>
 				</section>
 
@@ -606,7 +607,7 @@ db:
 	--amazonec2-region us-east-1 \
 	--amazonec2-secret-key asecretkey \
 	--amazonec2-vpc-id avpc\
-	avpc dockerec2
+	dockerec2
 
 > dm create -d virtualbox dev
 					</code></pre>
