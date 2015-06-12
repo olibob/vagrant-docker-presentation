@@ -192,7 +192,7 @@ end
 				<section>
 					<h2>Demo: Docker VM</h2>
 					<h4>Ansible provisioning - private network</h4>
-					<pre><code data-trim class="yaml">
+					<pre><code data-trim class="nohighlight">
 						---
 - hosts: all
   sudo: yes
@@ -218,7 +218,7 @@ end
 				<section>
 					<h2>What is it?</h2>
 					<p>
-Docker is an open platform for developers and sysadmins to build, ship, and run distributed applications. Consisting of Docker Engine, a portable, lightweight runtime and packaging tool, and Docker Hub, a cloud service for sharing applications and automating workflows, Docker enables apps to be quickly assembled from components and eliminates the friction between development, QA, and production environments. As a result, IT can ship faster and run the same app, unchanged, on laptops, data center VMs, and any cloud.
+Docker is an open platform for developers and sysadmins to build, ship, and run distributed applications. Consisting of Docker Engine, a portable, lightweight runtime and packaging tool, and Docker Hub, a cloud service for sharing applications and automating workflows, Docker enables apps to be quickly assembled from components and eliminates the friction between development, QA, and production environments. As a result, IT can ship faster and run the same app, unchanged, on laptops, data center VMs, and any cloud. (<a href="http://docker.com">docker.com</a>)
 					</p>
 				</section>
 
@@ -234,11 +234,10 @@ Docker is an open platform for developers and sysadmins to build, ship, and run 
 
 				<section>
 					<h2>Running containers everywhere!</h2>
-					<p class="fragment">Maturity of underlying technology (cgroups, namespaces, copy-on-write systems)</p>
+					<p class="fragment">The underlying technology is mature (cgroups, namespaces, copy-on-write systems)</p>
 					<p class="fragment">Ability to run on any Linux server today: physical, virtual, VM, cloud, OpenStack...</p>
-					<p class="fragment">Ability to move quickly between any of the above</p>
-					<p class="fragment">Ability to share containerized components</p>
-					<p class="fragment">Self contained environment - no dependency hell</p>
+					<p class="fragment">Ability to switch easily from one to the other</p>
+					<p class="fragment">Self contained environment = no dependency hell</p>
 				</section>
 
 				<section>
@@ -265,9 +264,22 @@ Docker is an open platform for developers and sysadmins to build, ship, and run 
 				</section>
 
 				<section>
+					<h2>That was the ...</h2>
+					<h4>... don't burst my bubble moment</h4>
+					<img src="img/Bursting-Bubble.jpg" alt="burst-bubble">
+					<aside class="notes">
+						<p>implies devs do what they want and ops uses it blindly: ain't gonna happen</p>
+						<p>it's a little more comlicated: security, vulnerabilities, data integrity, capacity, ...</p>
+					</aside>
+				</section>
+
+				<section>
 					<h2>modern software factory</h2>
 					<h4>the same container can go from dev, to test, to QA, to Prod</h4>
 					<img src="img/factory.png" alt="factory">
+					<aside class="notes">
+						<p>Again, data is an issue here (if data is encapsulated, then ok, ...)</p>
+					</aside>
 				</section>
 
 				<section>
@@ -298,8 +310,8 @@ Docker is an open platform for developers and sysadmins to build, ship, and run 
 				<section>
 					<h2>The "hello, world" container</h2>
 					<small>
-					<p>We used one of the smallest, simples images available: <em>busybox</em></p>
-					<p>busybox is typically used in embedded systems (phones, routers...)</p>
+					<p>We used one of the smallest, simplest images available: <em>busybox</em></p>
+					<p>Busybox is typically used in embedded systems like routers, stripped down linux distros, ...</p>
 					<p>We ran a single process and echo'ed hello world</p>
 					</small>
 					<pre><code data-trim class="bash">
@@ -322,6 +334,7 @@ root        18     1  0 07:28 ?        00:00:00 ps -ef
 root@6489e6302513:/#
 					</code></pre>
 					<aside class="notes">
+						<p>what distro you run is not relevant</p>
 						<p>-i = connect us to the container's stdin</p>
 						<p>-t = we need a pseudo-terminal (tty)</p>
 						<p>dpkg -l | wc</p>
@@ -581,6 +594,33 @@ db:
 						Now that you know more about docker, there is docker machine that lets you create docker hosts on VirtualBox, AWS ec2, Rackspace, ... There's docker Swarm that allows you to mange docker host ckusters, Fleet/etcd (CoreOS), Kubernetes (Google), Consul (Hashicorp), Mesos (Apache/Twitter), etc ... for orchestration.
 						<p>You've seen the tip of the iceberg ;)</p>
 					</small>
+				</section>
+
+				<section>
+					<h2>Docker Machine</h2>
+					<h4>create a docker host with one command</h4>
+					<pre><code data-trim class="nohighlight">
+					> dm create -d amazonec2 \
+	--amazonec2-access-key akey \
+	--amazonec2-instance-type t2.micro \
+	--amazonec2-region us-east-1 \
+	--amazonec2-secret-key asecretkey \
+	--amazonec2-vpc-id avpc\
+	avpc dockerec2
+
+> dm create -d virtualbox dev
+					</code></pre>
+					<aside class="notes">
+						<p>last release candidate did not build fusion image!</p>
+						<p>vb is well supported</p>
+						<p>ec2 is working ok</p>
+					</aside>
+				</section>
+
+				<section>
+					<h2>Docker Swarm</h2>
+					<h4>Native clustering system</h4>
+					TODO
 				</section>
 
 				<section>
