@@ -1,0 +1,5 @@
+bootstrap:
+  image: bob/reveal
+  command: npm install
+  volumes:
+    - .:/reveal

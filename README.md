@@ -6,8 +6,9 @@ A dockerfile and docker-compose yaml file are provided to get you started quickl
 
 - clone this repo
 - build your image based on the provided docker file:
-`docker build -t “bob/reveal” . `
-- `docker-compose up`
-- point your browser to `http://your_docker_host:8000`
+`docker build -t "bob/reveal" . `
+- Install dependencies: `docker-compose -f bootstrap.yml up`
+- Launch presentation: `docker-compose up`
+- Point your browser to `http://your_docker_host:8000`
 
-All demos can be found in the Vagrant directory.
+All basic demos can be found in the Vagrant directory.
